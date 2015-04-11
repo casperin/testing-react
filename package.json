@@ -1,0 +1,28 @@
+{
+  "name": "time-registrations",
+  "version": "0.0.0",
+  "description": "",
+  "main": "js/registrations.js",
+  "scripts": {
+    "start": "watchify src/registrations.js -d -t babelify -o js/registrations.js",
+    "stylus": "stylus -w -o css/ src/styles/"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "classnames": "^1.2.0",
+    "flux": "^2.0.1",
+    "lodash": "^3.6.0",
+    "moment": "^2.10.2",
+    "object-assign": "^2.0.0",
+    "ramda": "^0.13.0",
+    "react": "^0.13.1",
+    "react-datepicker": "^0.6.2"
+  },
+  "devDependencies": {
+    "babelify": "^6.0.2",
+    "browserify": "^9.0.8",
+    "reactify": "^1.1.0",
+    "watchify": "^3.1.0"
+  }
+}

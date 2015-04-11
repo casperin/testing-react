@@ -1,0 +1,71 @@
+.new-registration-form
+    margin 10px
+
+    .error
+        color #c00
+        font-size 13px
+
+    label
+        display block
+        padding-left 200px
+        margin 20px 0
+
+        > span
+            width 190px
+            margin 3px 0 0 -200px
+            text-align right
+            float left
+
+            small
+                font-size 11px
+                color #aaa
+                display block
+
+        input, textarea, select
+            font-size 13px
+            font-family inherit // textarea's defaults to monospace on phones
+            padding 5px
+            border 1px solid #e5e5e5
+            width 300px
+            background white
+
+        select
+            vertical-align -3px
+            width 312px // because selects don't like padding
+
+        &.label-description textarea
+            height 100px
+
+        &.label-time
+            input
+                width 50px
+            small
+                font-size 11px
+                margin-left 10px
+                color #888
+
+    .create-new-registration-btn
+        margin-left 200px
+
+
+    @media screen and (max-width: 600px)
+        label
+            padding 0
+            margin 10px 5px
+
+            > span
+                width auto
+                margin 0
+                text-align left
+                float none
+                display block
+
+                small
+                    display inline
+                    margin-left 5px
+
+            input, textarea, select
+                width 96%
+
+        .create-new-registration-btn
+            margin 0

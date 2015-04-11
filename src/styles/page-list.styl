@@ -1,0 +1,74 @@
+.empty-list-message
+    margin 30px
+    text-align center
+    color #aaa
+
+.registrations-list
+    margin 10px
+
+    .registrations-table
+        margin 20px auto
+        width 100%
+        border-collapse collapse
+        white-space nowrap
+
+        td
+            border-top 1px solid #e5e5e5
+            padding 5px 10px 5px 5px
+
+        .info-td
+            border-left 3px solid transparent
+
+        .customer
+            font-weight bold
+            margin-right 10px
+
+        @media screen and (max-width: 600px)
+            .info-td
+                white-space normal
+
+                span
+                    display block
+                .customer
+                    margin 0
+
+        .registration-controls
+            width 1%
+
+        .activeRow
+            .info-td
+                border-left-color #06c
+
+        .billed
+            .time
+                color #aaa
+                text-decoration line-through
+
+
+        .registration-controls
+            text-align right
+
+            .details-btn
+                background #aaa
+                &:hover
+                    background #888
+
+            .bill-btn
+                background #60a6d1
+                &:hover
+                    background #4386b0
+
+            .delete-btn
+                color #ccc
+                text-decoration none
+                &:hover
+                    color #888
+
+    .total
+        border-top 1px solid #e5e5e5
+        margin 10px 0
+        padding 10px 8px
+
+        .total-label
+            margin-right 10px
+
