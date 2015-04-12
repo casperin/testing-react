@@ -10,5 +10,5 @@ I had a goal of learning React during easter, as well as getting my ES6 and npm 
 
 ## What is it?
 
-Basically a small app that (as a freelancer) lets you register time spend working for clients. It doesn't actually save anything to anywhere, and there's currently no way to add or remove clients, so it's rather useless as a an actual tool.
+Basically a small app that (as a freelancer) lets you register time spend working for clients. It doesn't actually save anything to anywhere, so it's rather useless as a an actual tool.
 
