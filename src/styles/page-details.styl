@@ -1,8 +1,21 @@
+.error-message
+    margin 20px
+    text-align center
+    color #c00
+
 .details
     margin 10px
 
     .time
         margin-bottom 10px
+
+        &.billed
+            .value
+                text-decoration line-through
+                color #888
+
+            &:after
+                content ' (billed)'
 
     .title
         font-weight bold

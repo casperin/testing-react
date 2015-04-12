@@ -1,14 +1,30 @@
+/**
+ *
+ * This is the page of creating a new registration.
+ *
+ * Uses two helpers to validate and parse time registrations properly.
+ *
+ * TODO: Rename to RegistrationCreate so it matches the others (List and
+ * Details)
+ * TODO: :%s/new/create/g
+ *
+ */
+
+
 // Tools
 import React from 'react';
 import Validate from '../helpers/Validate';
 import Time from '../helpers/Time';
+import {Link} from 'react-router';
 
 // Constants
 import Constants from '../constants/Constants';
 
+// Stores
+import CustomerStore from '../stores/CustomerStore';
+
 // Actions
 import RegistrationActions from '../actions/RegistrationActions';
-import NavigationActions from '../actions/NavigationActions';
 
 // Components
 import Controls from './Controls';
@@ -16,10 +32,17 @@ import Controls from './Controls';
 
 
 const NewRegistration = React.createClass({
+   contextTypes: {
+        router: React.PropTypes.func
+    },
+
     getInitialState: function () {
+        const customers = CustomerStore.getAll();
+
         return {
-            customer_id: this.props.customers[0].id,
-            title: '',
+            customers: customers,
+            customer_id: localStorage.getItem('customer_id') || customers[0].id,
+            title: '',  // Should this be persisted too?
             time: localStorage.getItem('time') || '1h',
             description: '',
             showTitleError: false,
@@ -34,8 +57,8 @@ const NewRegistration = React.createClass({
     },
 
     render: function () {
-            // Options for the customer select box
-        const customerOptions = this.props.customers.map((customer, key) => <option key={key} value={customer.id}>{customer.name}</option>),
+            // <option>s for the customer <select>
+        const customerOptions = this.state.customers.map((customer, key) => <option key={key} value={customer.id}>{customer.name}</option>),
 
             // Error messages
             titleErrorDisplay = this.state.showTitleError ? <div className='title-error error'>Remember a title</div> : null,
@@ -55,7 +78,7 @@ const NewRegistration = React.createClass({
 
                     <label className='label-customer'>
                         <span>Customer</span>
-                        <select ref='select' onChange={this._onFieldChange.bind(this, 'customer_id')}>{customerOptions}</select>
+                        <select ref='select' value={this.state.customer_id} onChange={this._onFieldChange.bind(this, 'customer_id')}>{customerOptions}</select>
                     </label>
 
                     <label className='label-title'>
@@ -104,18 +127,24 @@ const NewRegistration = React.createClass({
         });
     },
 
+    // Called when "form" is submitted.
     registerTime: function () {
+        // Construct the data we need, from the current state.
         const newTime = {
-            customer_id: this.state.customer_id,
+            customer_id: parseInt(this.state.customer_id, 10),
             title: this.state.title,
             time: Time.parse(this.state.time),
             description: this.state.description
         };
 
         if (Validate.newRegistration(newTime)) {
+            // Save defaults
+            localStorage.setItem('customer_id', this.state.customer_id);
             localStorage.setItem('time', this.state.time);
+
+            // Add it, and go to the list
             RegistrationActions.create(newTime);
-            NavigationActions.changePage(Constants.Pages.LIST);
+            this.context.router.transitionTo('/');
         } else {
             this.validateTitle();
             this.validateTime();
@@ -124,3 +153,4 @@ const NewRegistration = React.createClass({
 });
 
 export default NewRegistration;
+

@@ -1,33 +1,41 @@
+/**
+ *
+ * The controls is the grey top bar on every page. On the registration list
+ * page, it contains controls for filtering and sorting the registrations. And
+ * on every other page ('create' and 'details') it just has a "go back" button.
+ *
+ */
+
 // Tools
 import React from 'react';
+import {Link} from 'react-router';
 
 // Constants
 import Constants from '../constants/Constants';
 
 // Actions
 import RegistrationActions from '../actions/RegistrationActions';
-import NavigationActions from '../actions/NavigationActions';
 
 
 const Controls = React.createClass({
+    contextTypes: {
+        router: React.PropTypes.func
+    },
+
     render: function () {
         // If this is not the controls for the list, then we just display a
         // simple "go back" controls header.
         if (this.props.page !== Constants.Pages.LIST) {
             return (
                 <div className='controls'>
-                    <button
-                        title='Press "Esc"'
-                        onClick={this.goBack}
-                        className='btn btn-cancel cancel-new-btn'
-                    >Go back</button>
+                    <a href='#' onClick={this._goBack} title='Press "Esc"' className='btn btn-cancel'>Go back</a>
                 </div>
             );
         }
 
-        const customerWithAll = [{id: -1, name: 'All customers'}].concat(this.props.customers),
-
-            customers = customerWithAll.map((customer, key) =>
+        // Building the <option>s for the <select>
+        const customersWithAll = [{id: -1, name: 'All customers'}].concat(this.props.customers),
+            customers = customersWithAll.map((customer, key) =>
                 <option key={key} value={customer.id}>{customer.name}</option>
             ),
 
@@ -36,28 +44,26 @@ const Controls = React.createClass({
 
         return (
             <div className='controls'>
-                <button title='Press "N"' className='btn btn-submit create-new-btn' onClick={this.createNew}>New registration</button>
+                <Link title='Press "N"' className='btn btn-submit create-new-btn' to='create'>New registration</Link>
                 <select value={this.props.filterId} onChange={this._toggleUsers}>{customers}</select>
                 <div className='tabs'>
-                    <a href='#' onClick={this._changeTab.bind(this, Constants.Tabs.NEW)} className={newTabClass}>New</a>
-                    <a href='#' onClick={this._changeTab.bind(this, Constants.Tabs.BILLED)} className={billedTabClass}>Billed</a>
+                    <Link to='list/:type' params={{type: 'new'}} className={newTabClass}>New</Link>
+                    <Link to='list/:type' params={{type: 'billed'}} className={billedTabClass}>Billed</Link>
                 </div>
             </div>
         );
     },
 
-    goBack: () =>
-        NavigationActions.changePage(Constants.Pages.LIST),
-
-    _toggleUsers: ({target}) =>
-        RegistrationActions.filterBy('customer_id', parseInt(target.value, 10)),
-
-    _changeTab: (tab, event) => {
+    _goBack: function (event) {
         event.preventDefault();
-        RegistrationActions.changeTab(tab);
+        if (!this.context.router.goBack()) {
+            this.context.router.transitionTo('/');
+        }
     },
 
-    createNew: () => NavigationActions.changePage(Constants.Pages.NEW)
+    // <select> handler
+    _toggleUsers: ({target}) =>
+        RegistrationActions.filterBy('customer_id', parseInt(target.value, 10))
 });
 
 export default Controls;

@@ -1,3 +1,8 @@
+/**
+ *
+ * Tiny helper class to validate title and time on creating a new registration.
+ *
+ */
 const Validate = {
     title: title => title.length > 0,
 

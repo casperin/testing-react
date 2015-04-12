@@ -23,6 +23,7 @@ body h1 {
   margin-top: 10px;
 }
 #container .btn {
+  text-decoration: none;
   background: #900;
   color: #fff;
   border: none;
@@ -44,6 +45,7 @@ body h1 {
   background: #ccc;
 }
 #container .small-btn {
+  text-decoration: none;
   cursor: pointer;
   margin-right: 15px;
   color: #fff;
@@ -131,8 +133,10 @@ body h1 {
 #container .registrations-list .registrations-table .registration-controls {
   width: 1%;
 }
-#container .registrations-list .registrations-table .activeRow .info-td {
-  border-left-color: #06c;
+@media screen and (min-width: 599px) {
+  #container .registrations-list .registrations-table .activeRow .info-td {
+    border-left-color: #06c;
+  }
 }
 #container .registrations-list .registrations-table .billed .time {
   color: #aaa;
@@ -244,11 +248,23 @@ body h1 {
     margin: 0;
   }
 }
+#container .error-message {
+  margin: 20px;
+  text-align: center;
+  color: #c00;
+}
 #container .details {
   margin: 10px;
 }
 #container .details .time {
   margin-bottom: 10px;
+}
+#container .details .time.billed .value {
+  text-decoration: line-through;
+  color: #888;
+}
+#container .details .time.billed:after {
+  content: ' (billed)';
 }
 #container .details .title {
   font-weight: bold;

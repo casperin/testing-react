@@ -1,15 +1,21 @@
+/**
+ *
+ * Shows a single row on the registration list.
+ *
+ */
+
+
 // Tools
 import React from 'react';
 import cx from 'classnames';
 import Time from '../helpers/Time';
+import {Link} from 'react-router';
 
 // Constants
 import Constants from '../constants/Constants';
 
 // Actions
 import RegistrationActions from '../actions/RegistrationActions';
-import NavigationActions from '../actions/NavigationActions';
-
 
 
 const RegistrationListRow = React.createClass({
@@ -26,13 +32,16 @@ const RegistrationListRow = React.createClass({
                     <span className='customer'>{this.props.customerName}</span>
                     <span className='title'>{this.props.registration.title}</span>
                 </td>
+
                 <td className='time'>{Time.pretty(this.props.registration.time)}</td>
+
                 <td className='registration-controls'>
-                    <button
+                    <Link
                         title='Press "Enter" or "O"'
                         className='details-btn small-btn'
-                        onClick={this._showDetails}
-                    >View</button>
+                        to='details/:id'
+                        params={{id: this.props.registration.id}}
+                    >View</Link>
 
                     <button
                         title='Press "B"'
@@ -60,11 +69,6 @@ const RegistrationListRow = React.createClass({
         }
 
         RegistrationActions.toggleState(key, this.props.registration.id);
-    },
-
-    // Go to the Details view of this
-    _showDetails: function () {
-        NavigationActions.changePage(Constants.Pages.DETAILS, this.props.registration.id);
     }
 });
 

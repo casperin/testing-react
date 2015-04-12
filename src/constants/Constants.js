@@ -1,8 +1,13 @@
+/**
+ *
+ * A way to organize strings to avoid typos and such. Also works a lot better
+ * when using an IDE of sorts, that actually understand importing of objects to
+ * get auto completion.
+ *
+ */
 const Constants = {
     Actions: {
         CREATE: 'create',
-        CHANGE_TAB: 'change-tab',
-        CHANGE_PAGE: 'change-page',
         TOGGLE_STATE: 'toggle-state',
         DELETE: 'delete',
         FILTER_BY: 'filter-by'

@@ -1,3 +1,11 @@
+/**
+ *
+ * Small helpers class to handle the slightly obscure time format that I
+ * invented. (No, I would not do that in code intended for production).
+ *
+ * All functions are pure.
+ *
+ */
 import _ from 'lodash';
 
 const pruneTime = (str, factor = 1) => {
@@ -12,7 +20,6 @@ const pruneTime = (str, factor = 1) => {
 
         return {hours, minutes};
     };
-
 
 
 const Time = {

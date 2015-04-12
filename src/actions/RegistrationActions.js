@@ -15,12 +15,6 @@ const RegistrationActions = {
             id
         }),
 
-    changeTab: tab =>
-        AppDispatcher.dispatch({
-            actionType: Constants.Actions.CHANGE_TAB,
-            tab
-        }),
-
     filterBy: (key, value) =>
         AppDispatcher.dispatch({
             actionType: Constants.Actions.FILTER_BY,

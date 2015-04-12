@@ -4,8 +4,8 @@
   "description": "",
   "main": "js/registrations.js",
   "scripts": {
-    "start": "watchify src/registrations.js -d -t babelify -o js/registrations.js",
-    "stylus": "stylus -w -o css/ src/styles/"
+    "start": "watchify src/components/RegistrationsOverview.js -d -t babelify -o www/js/registrations.js",
+    "stylus": "stylus -w -o www/css/ src/styles/registrations.styl"
   },
   "author": "",
   "license": "ISC",
@@ -17,7 +17,8 @@
     "object-assign": "^2.0.0",
     "ramda": "^0.13.0",
     "react": "^0.13.1",
-    "react-datepicker": "^0.6.2"
+    "react-datepicker": "^0.6.2",
+    "react-router": "^0.13.2"
   },
   "devDependencies": {
     "babelify": "^6.0.2",

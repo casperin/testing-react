@@ -1,3 +1,11 @@
+/**
+ *
+ * Main store in this little app. It takes care of listening for changes and
+ * update time registrations, as well as filtering them as needed when asked
+ * to.
+ *
+ */
+
 // Tools
 import AppDispatcher from '../dispatcher/AppDispatcher';
 import assign from 'object-assign';
@@ -13,6 +21,8 @@ import registrationData from '../data/registrations.js';
 // Strictly speaking, this is not needed, but it seems wrong to edit something
 // that is imported. Doesn't matter much, in the real world, it would not be
 // imported, but rather arrive through an ajax call.
+// And yes, we can use `const` because we are never editing the value itself,
+// only "children" of it.
 let registrations = _.cloneDeep(registrationData);
 
 const CHANGE_EVENT = 'change';
@@ -23,11 +33,13 @@ const filters = {
 };
 
 const RegistrationsStore = assign({}, EventEmitter.prototype, {
-    getRegistrations: () =>
+    getRegistrations: type =>
         registrations
-            .filter(r => filters.billed === r.billed)
+            .filter(r => type === 'billed' ? r.billed : !r.billed)
             .filter(r => !r.deleted)
             .filter(r => filters.customer_id < 0 || r.customer_id === filters.customer_id),
+
+    getRegistrationById: id => _.findWhere(registrations, {id}),
 
     getFilterId: () => filters.customer_id,
 
@@ -44,7 +56,7 @@ const RegistrationsStore = assign({}, EventEmitter.prototype, {
     }
 });
 
-
+// Listening for events from the RegistrationActions.
 AppDispatcher.register(action => {
     switch (action.actionType) {
     case Constants.Actions.CREATE:
@@ -53,11 +65,6 @@ AppDispatcher.register(action => {
             deleted: false,             // Maybe these too...
             billed: false
         }, action.time));
-        RegistrationsStore.emitChange();
-        break;
-
-    case Constants.Actions.CHANGE_TAB:
-        filters.billed = action.tab === Constants.Tabs.BILLED;
         RegistrationsStore.emitChange();
         break;
 
@@ -75,3 +82,4 @@ AppDispatcher.register(action => {
 });
 
 export default RegistrationsStore;
+

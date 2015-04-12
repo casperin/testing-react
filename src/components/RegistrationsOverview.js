@@ -1,17 +1,24 @@
+/**
+ *
+ * This is the main file that includes everything else (except the css of
+ * course). Its main responsibility is routing, but it also handles a listening
+ * for the Esc and the ?-key.
+ *
+ * It should remain free of Actions and Store logic. (ie. don't handle data
+ * directly).
+ *
+ * TODO: Abstract the keyboard handling out. (see also RegistrationList)
+ *
+ */
+
 // Tools
 import React from 'react';
 import _ from 'lodash';
+import Router from 'react-router';
+const { Route, Redirect, RouteHandler, Link, NotFoundRoute } = Router;
 
 // Constants
 import Constants from '../constants/Constants';
-
-// Stores
-import RegistrationsStore from '../stores/RegistrationsStore';
-import CustomerStore from '../stores/CustomerStore';
-import NavigationStore from '../stores/NavigationStore';
-
-// Actions
-import NavigationActions from '../actions/NavigationActions';
 
 // Compononents
 import RegistrationList from './RegistrationList';
@@ -21,57 +28,22 @@ import Shortcuts from './Shortcuts';
 
 
 const RegistrationOverview = React.createClass({
+    // This can be found in a lot of components. This is required by
+    // react-router, to access `this.context.router`.
+    contextTypes: {
+        router: React.PropTypes.func
+    },
+
     getInitialState: () => ({
-        page: NavigationStore.getPage(),
-        tab: NavigationStore.getTab(),
-        registrations: RegistrationsStore.getRegistrations(),
-        filterId: RegistrationsStore.getFilterId(),
-        customers: CustomerStore.getAll(),
         showShortcuts: false
     }),
 
     componentDidMount: function () {
-        NavigationStore.addChangeListener(this._onNavigationChange);
-        RegistrationsStore.addChangeListener(this._onRegistrationChange);
         document.addEventListener("keydown", this._handleDocumentKeyDown, false);
     },
 
     componentWillUnmount: function() {
-        NavigationStore.removeChangeListener(this._onNavigationChange);
-        RegistrationsStore.removeChangeListener(this._onRegistrationChange);
         document.removeEventListener("keydown", this._handleDocumentKeyDown, false);
-    },
-
-    render: function () {
-        let page = null;
-
-        // Pull out the parts we need
-        const {registrations, customers, tab, filterId} = this.state;
-
-        switch (this.state.page) {
-        case Constants.Pages.LIST:
-            page = <RegistrationList filterId={filterId} registrations={registrations} customers={customers} tab={tab} />;
-            break;
-
-        case Constants.Pages.NEW:
-            page = <NewRegistration customers={customers} />
-            break;
-
-        case Constants.Pages.DETAILS:
-            const id = NavigationStore.getDetailsId(),
-                registration = _.findWhere(registrations, {id}),
-                customer = _.findWhere(customers, {id: registration.customer_id});
-
-            page = <RegistrationDetails registration={registration} customer={customer} />
-            break;
-        }
-
-        return (
-            <div className='registrations-container'>
-                <Shortcuts display={this.state.showShortcuts} />
-                {page}
-            </div>
-        );
     },
 
     _handleDocumentKeyDown: function ({keyCode}) {
@@ -79,8 +51,12 @@ const RegistrationOverview = React.createClass({
             if (this.state.showShortcuts) {
                 this.setState({showShortcuts: false});
             } else {
-                NavigationActions.changeTab(Constants.Tabs.NEW)
-                NavigationActions.changePage(Constants.Pages.LIST)
+                // Attempt to go back, if that doesn't work (most likely
+                // because the page was refreshed), we just transfer to the
+                // main page.
+                if (!this.context.router.goBack()) {
+                    this.context.router.transitionTo('/');
+                }
             }
         }
 
@@ -99,22 +75,25 @@ const RegistrationOverview = React.createClass({
         }
     },
 
-    _onRegistrationChange: function () {
-        this.setState({
-            registrations: RegistrationsStore.getRegistrations(),
-            filterId: RegistrationsStore.getFilterId(),
-            showShortcuts: false
-        });
-    },
-
-    _onNavigationChange: function () {
-        this.setState({
-            page: NavigationStore.getPage(),
-            tab: NavigationStore.getTab(),
-            showShortcuts: false
-        });
+    render: function () {
+        return (
+            <div className='registrations-container'>
+                <Shortcuts display={this.state.showShortcuts} />
+                <RouteHandler />
+            </div>
+        );
     }
 });
 
-export default RegistrationOverview;
+const routes = (
+    <Route handler={RegistrationOverview}>
+        <Route name='list/:type' handler={RegistrationList} />
+        <Route name='create' handler={NewRegistration} />
+        <Route name='details/:id' handler={RegistrationDetails} />
+        <Redirect from="/" to="list/:type" params={{type: 'new'}} />
+    </Route>
+);
 
+Router.run(routes, Handler =>
+    React.render(<Handler />, document.getElementById('container'))
+);

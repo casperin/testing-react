@@ -1,3 +1,9 @@
+/**
+ *
+ * This is the shortcut overlay component. It does not do any actual handling
+ * of the keyboard events.
+ *
+ */
 import React from 'react';
 
 
@@ -23,7 +29,7 @@ const Shortcuts = React.createClass({
                     <dt>n</dt>
                     <dd>Create new registration</dd>
                     <dt>Esc</dt>
-                    <dd>Go to the regitration overview</dd>
+                    <dd>Go back</dd>
                     <dt>?/h</dt>
                     <dd>Open this box</dd>
                 </dl>
