@@ -179,6 +179,9 @@ body h1 {
   color: #c00;
   font-size: 13px;
 }
+#container .new-registration-form .hide {
+  display: none;
+}
 #container .new-registration-form label {
   display: block;
   padding-left: 200px;
@@ -194,6 +197,12 @@ body h1 {
   font-size: 11px;
   color: #aaa;
   display: block;
+}
+#container .new-registration-form label .add-new {
+  margin-left: 5px;
+  font-size: 13px;
+  vertical-align: -3px;
+  color: #888;
 }
 #container .new-registration-form label input,
 #container .new-registration-form label textarea,

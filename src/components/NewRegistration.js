@@ -16,6 +16,7 @@ import React from 'react';
 import Validate from '../helpers/Validate';
 import Time from '../helpers/Time';
 import {Link} from 'react-router';
+import _ from 'lodash';
 
 // Constants
 import Constants from '../constants/Constants';
@@ -25,6 +26,7 @@ import CustomerStore from '../stores/CustomerStore';
 
 // Actions
 import RegistrationActions from '../actions/RegistrationActions';
+import CustomerActions from '../actions/CustomerActions';
 
 // Components
 import Controls from './Controls';
@@ -46,14 +48,27 @@ const NewRegistration = React.createClass({
             time: localStorage.getItem('time') || '1h',
             description: '',
             showTitleError: false,
-            showTimeError: false
+            showTimeError: false,
+            showNewCustomer: false,
+            newCustomerName: ''
         };
     },
 
     componentDidMount: function () {
+        CustomerStore.addChangeListener(this._onCustomerStoreChange);
         // We want to set the focus on the select element to ease the use of
         // keyboard navigation.
         this.refs.select.getDOMNode().focus();
+    },
+
+    componentWillUnmount: function () {
+        CustomerStore.removeChangeListener(this._onCustomerStoreChange);
+    },
+
+    _onCustomerStoreChange: function () {
+        this.setState({
+            customers: CustomerStore.getAll()
+        });
     },
 
     render: function () {
@@ -69,6 +84,7 @@ const NewRegistration = React.createClass({
             prettyTime = timeInMinutes ? <small>{Time.prettyFull(timeInMinutes)}</small> : <small>?</small>;
 
 
+
         return (
             <div className='new-registration-container'>
                 <Controls page={Constants.Pages.NEW} />
@@ -78,12 +94,38 @@ const NewRegistration = React.createClass({
 
                     <label className='label-customer'>
                         <span>Customer</span>
-                        <select ref='select' value={this.state.customer_id} onChange={this._onFieldChange.bind(this, 'customer_id')}>{customerOptions}</select>
+
+                        <select
+                            className={this.state.showNewCustomer ? 'hide' : ''}
+                            ref='select'
+                            value={this.state.customer_id}
+                            onChange={this._onFieldChange.bind(this, 'customer_id')}
+                        >{customerOptions}</select>
+
+                        <a
+                            className={this.state.showNewCustomer ? 'add-new hide' : 'add-new'}
+                            href='#'
+                            onClick={this._toggleNewCustomer}
+                        >new</a>
+
+                        <input
+                            placeholder='Name of the new customer'
+                            ref='newCustomerInput'
+                            className={!this.state.showNewCustomer ? 'hide' : ''}
+                            type='text'
+                            value={this.state.newCustomerName}
+                            onChange={this._changeNewCustomer}
+                        />
                     </label>
 
                     <label className='label-title'>
                         <span>Title</span>
-                        <input value={this.state.title} onChange={this._onFieldChange.bind(this, 'title')} onKeyUp={this.validateTitle} />
+                        <input
+                            placeholder='What did you do?'
+                            value={this.state.title}
+                            onChange={this._onFieldChange.bind(this, 'title')}
+                            onKeyUp={this.validateTitle}
+                        />
                         {titleErrorDisplay}
                     </label>
 
@@ -127,11 +169,38 @@ const NewRegistration = React.createClass({
         });
     },
 
+    _toggleNewCustomer: function (event) {
+        const self = this;
+
+        event.preventDefault();
+
+        this.setState({
+            showNewCustomer: !this.state.showNewCustomer
+        });
+
+        // This is such a hack :(
+        _.defer(() => self.refs.newCustomerInput.getDOMNode().focus());
+    },
+
+    _changeNewCustomer: function ({target}) {
+        this.setState({
+            newCustomerName: target.value
+        });
+    },
+
     // Called when "form" is submitted.
     registerTime: function () {
+        let customer_id = this.state.customer_id;
+
+        if (this.state.showNewCustomer) {
+            CustomerActions.add(this.state.newCustomerName);
+
+            customer_id = this.state.customers[this.state.customers.length-1].id
+        }
+
         // Construct the data we need, from the current state.
         const newTime = {
-            customer_id: parseInt(this.state.customer_id, 10),
+            customer_id: parseInt(customer_id, 10),
             title: this.state.title,
             time: Time.parse(this.state.time),
             description: this.state.description

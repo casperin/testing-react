@@ -10,7 +10,8 @@ const Constants = {
         CREATE: 'create',
         TOGGLE_STATE: 'toggle-state',
         DELETE: 'delete',
-        FILTER_BY: 'filter-by'
+        FILTER_BY: 'filter-by',
+        ADD_CUSTOMER: 'add-customer'
     },
 
     Pages: {

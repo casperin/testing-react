@@ -32,7 +32,7 @@ const registrations = [
         billed: false,
         customer_id: 6,
         time: 260,
-        title: 'You\'t wanna know',
+        title: 'You don\'t wanna know',
         description: 'Really... you don\'t.'
     },
     {
