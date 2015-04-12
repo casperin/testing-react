@@ -1,23 +1,20 @@
 {
   "name": "time-registrations",
   "version": "0.0.0",
-  "description": "",
+  "description": "Me learning React",
   "main": "js/registrations.js",
   "scripts": {
     "start": "watchify src/components/RegistrationsOverview.js -d -t babelify -o www/js/registrations.js",
     "stylus": "stylus -w -o www/css/ src/styles/registrations.styl"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "Gorm Casper",
+  "license": "MIT",
   "dependencies": {
     "classnames": "^1.2.0",
     "flux": "^2.0.1",
     "lodash": "^3.6.0",
-    "moment": "^2.10.2",
     "object-assign": "^2.0.0",
-    "ramda": "^0.13.0",
     "react": "^0.13.1",
-    "react-datepicker": "^0.6.2",
     "react-router": "^0.13.2"
   },
   "devDependencies": {
@@ -27,3 +24,4 @@
     "watchify": "^3.1.0"
   }
 }
+

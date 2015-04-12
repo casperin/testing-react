@@ -1,5 +1,9 @@
 const customers = [
     {
+        id: 0,
+        name: 'Kum\'n Go'
+    },
+    {
         id: 1,
         name: 'Wok\'n Roll'
     },
@@ -26,11 +30,8 @@ const customers = [
     {
         id: 7,
         name: 'Burger friends'
-    },
-    {
-        id: 8,
-        name: 'Kum\'n Go'
     }
 ];
 
 export default customers;
+
